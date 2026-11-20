@@ -34,7 +34,9 @@ ARM_ARCH_MAJOR			:=	8
 HW_ASSISTED_COHERENCY		:=	0
 USE_COHERENT_MEM		:=	1
 
-# Default BL33 (kernel) load address; override on the make line if the loader
-# places it elsewhere.
-PRELOADED_BL33_BASE		?=	0x00080000
+# Default BL33 (kernel) load address: where the boot loader places the kernel
+# Image. Must match the loader's configuration; override on the make line if
+# the loader places it elsewhere. 2 MiB-aligned, as the arm64 boot protocol
+# requires for an Image with text_offset 0 (Documentation/arch/arm64/booting.rst).
+PRELOADED_BL33_BASE		?=	0x00200000
 $(eval $(call add_define_val,PLAT_LG1314_NS_IMAGE_BASE,$(PRELOADED_BL33_BASE)))

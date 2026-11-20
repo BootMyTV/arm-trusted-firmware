@@ -77,7 +77,7 @@
  * returns it. The DTB phys is passed to BL31 in x0 (arg0), else this default.
  */
 #ifndef PLAT_LG1314_NS_IMAGE_BASE
-#define PLAT_LG1314_NS_IMAGE_BASE	UL(0x00080000)
+#define PLAT_LG1314_NS_IMAGE_BASE	UL(0x00200000)
 #endif
 #ifndef PLAT_LG1314_DTB_BASE
 #define PLAT_LG1314_DTB_BASE		UL(0x02000000)
