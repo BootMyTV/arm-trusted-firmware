@@ -121,6 +121,14 @@
 #define LG1314_MICOM_CMD_POWER		U(0x25)
 #define LG1314_MICOM_POWER_COLD_STANDBY	U(0x00)
 #define LG1314_MICOM_OFF_BY_CPUCMD	U(0x00)
+/*
+ * Command 0x21 sets the power-on reason the MICOM reports to the next boot. Set
+ * on reset, so the boot after a reboot doesn't see the stale reason of the last
+ * real power-on (e.g. "mains restored"); 0x20 = "remote key", an ordinary
+ * power-on to anything reading it (bootmytv shim, webOS).
+ */
+#define LG1314_MICOM_CMD_POWER_ON_MODE	U(0x21)
+#define LG1314_MICOM_ON_BY_REMOTE_KEY	U(0x20)
 
 /*
  * TZC-400 DDR firewalls: two instances (memory controllers M0/M1).

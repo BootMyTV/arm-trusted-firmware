@@ -236,6 +236,17 @@ static void __dead2 lg1314_system_off(void)
  */
 static void __dead2 lg1314_system_reset(void)
 {
+	static const uint8_t power_on_mode[] = {
+		LG1314_MICOM_CMD_POWER_ON_MODE,
+		LG1314_MICOM_ON_BY_REMOTE_KEY,
+	};
+	int ret;
+
+	/* Best effort: on failure the next boot just sees a stale reason. */
+	ret = lg1314_micom_write(power_on_mode, sizeof(power_on_mode));
+	if (ret != 0)
+		WARN("BL31: MICOM power-on mode not set (%d)\n", ret);
+
 	NOTICE("BL31: system reset via SP805\n");
 	console_flush();
 
