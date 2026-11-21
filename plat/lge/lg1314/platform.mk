@@ -17,9 +17,13 @@ PLAT_BL_COMMON_SOURCES	:=	drivers/arm/pl011/aarch64/pl011_console.S	\
 BL31_SOURCES		+=	${GICV2_SOURCES}				\
 				plat/common/plat_gicv2.c			\
 				drivers/arm/tzc/tzc400.c			\
+				drivers/arm/sp805/sp805.c			\
+				drivers/delay_timer/delay_timer.c		\
+				drivers/delay_timer/generic_delay_timer.c	\
 				plat/common/plat_psci_common.c			\
 				lib/cpus/aarch64/cortex_a53.S			\
 				plat/lge/lg1314/lg1314_bl31_setup.c		\
+				plat/lge/lg1314/lg1314_micom.c			\
 				plat/lge/lg1314/lg1314_pm.c			\
 				plat/lge/lg1314/lg1314_topology.c
 

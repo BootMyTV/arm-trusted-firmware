@@ -13,6 +13,7 @@
 #include <drivers/arm/pl011.h>
 #include <drivers/arm/tzc400.h>
 #include <drivers/console.h>
+#include <drivers/generic_delay_timer.h>
 #include <lib/mmio.h>
 #include <lib/xlat_tables/xlat_tables_v2.h>
 #include <plat/common/platform.h>
@@ -129,6 +130,8 @@ static void lg1314_tzc_open_to_ns(void)
 
 void bl31_platform_setup(void)
 {
+	generic_delay_timer_init();
+
 	gicv2_driver_init(&lg1314_gic_data);
 	gicv2_distif_init();
 	gicv2_pcpu_distif_init();

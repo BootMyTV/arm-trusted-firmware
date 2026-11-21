@@ -7,9 +7,13 @@
 #include <arch_helpers.h>
 #include <common/debug.h>
 #include <drivers/arm/gicv2.h>
+#include <drivers/arm/sp805.h>
+#include <drivers/console.h>
 #include <lib/mmio.h>
 #include <lib/psci/psci.h>
 #include <plat/common/platform.h>
+
+#include <lg1314_micom.h>
 
 /* Secondary-CPU warm-boot entrypoint, published to the SMP pen at CPU_ON. */
 static uintptr_t lg1314_sec_entrypoint;
@@ -200,16 +204,44 @@ static void __dead2 lg1314_pwr_down_wfi(const psci_power_state_t *target_state)
 		wfi();
 }
 
+/*
+ * Off = the standby MICOM's cold-standby command; it then cuts SoC power. The
+ * MICOM keeps running (RTC, remote power-on).
+ */
 static void __dead2 lg1314_system_off(void)
 {
-	ERROR("BL31: PSCI_SYSTEM_OFF not implemented\n");	/* TODO */
+	static const uint8_t cmd[] = {
+		LG1314_MICOM_CMD_POWER,
+		LG1314_MICOM_POWER_COLD_STANDBY,
+		LG1314_MICOM_OFF_BY_CPUCMD,
+	};
+	int ret;
+
+	NOTICE("BL31: system off via MICOM\n");
+	console_flush();
+
+	ret = lg1314_micom_write(cmd, sizeof(cmd));
+	if (ret != 0)
+		ERROR("BL31: MICOM power-off command failed (%d)\n", ret);
+
 	for (;;)
 		wfi();
 }
 
+/*
+ * Reset = SP805 watchdog expiry: an SoC reset that leaves the standby MICOM
+ * (and its RTC) alone. The kernel's sp805 driver leaves the registers
+ * locked; sp805_stop() unlocks (and disables), then sp805_start() loads a
+ * tiny count with reset enabled.
+ */
 static void __dead2 lg1314_system_reset(void)
 {
-	ERROR("BL31: PSCI_SYSTEM_RESET not implemented\n");	/* TODO */
+	NOTICE("BL31: system reset via SP805\n");
+	console_flush();
+
+	sp805_stop(LG1314_SP805_BASE);
+	sp805_start(LG1314_SP805_BASE, LG1314_SP805_RESET_TICKS);
+
 	for (;;)
 		wfi();
 }

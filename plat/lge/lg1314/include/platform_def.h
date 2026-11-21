@@ -99,6 +99,29 @@
 #define PLAT_LG1314_UART_CLK_IN_HZ	U(198000000)	/* busclk = xtal 24MHz * 33/4 */
 #define PLAT_LG1314_UART_BAUDRATE	U(115200)
 
+/* APB bus clock feeding the UART, I2C and watchdog blocks. */
+#define LG1314_BUSCLK_HZ		U(198000000)
+
+/*
+ * SP805 watchdog (the kernel's watchdog@fd200000), used for PSCI SYSTEM_RESET.
+ * Resets the SoC; the standby MICOM, and the RTC it keeps, stay up.
+ */
+#define LG1314_SP805_BASE		UL(0xfd200000)
+/* Reset fires on the second expiry; a few us at busclk. */
+#define LG1314_SP805_RESET_TICKS	U(0x1000)
+
+/*
+ * Standby MICOM on I2C bus 1 (the kernel's i2c@fe400000, client 0x29), used
+ * for PSCI SYSTEM_OFF: command 0x25 = enter power state, state 0 = cold
+ * standby. The second argument is the power-off reason the MICOM records.
+ */
+#define LG1314_MICOM_I2C_BASE		UL(0xfe400000)
+#define LG1314_MICOM_I2C_ADDR		U(0x29)
+#define LG1314_MICOM_I2C_HZ		U(100000)
+#define LG1314_MICOM_CMD_POWER		U(0x25)
+#define LG1314_MICOM_POWER_COLD_STANDBY	U(0x00)
+#define LG1314_MICOM_OFF_BY_CPUCMD	U(0x00)
+
 /*
  * TZC-400 DDR firewalls: two instances (memory controllers M0/M1).
  * We open both region-0 (background) fully to the non-secure world - null
