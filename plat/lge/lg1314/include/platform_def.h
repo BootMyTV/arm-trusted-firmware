@@ -33,11 +33,10 @@
 /* -------------------------------------------------------------------------
  * Memory map
  *
- * The 0x3e400000..0x4f400000 gap is NOT handed to Linux (it sits between the
- * two low DRAM banks), so it's a safe home for BL31 that the non-secure OS
- * does not map.
+ * BL31 lives where LG's tzfw otherwise would, at the top of the second
+ * DRAM bank (reserved in linux's device tree)
  * ---------------------------------------------------------------------- */
-#define LG1314_SEC_BASE			UL(0x3e400000)
+#define LG1314_SEC_BASE			UL(0x7f500000)
 #define LG1314_SEC_SIZE			UL(0x00200000)	/* 2 MiB */
 
 /*
@@ -68,8 +67,8 @@
 #define CPUPWR_STATUS			U(0x3fc)	/* [0:3] SMPEN per cpu */
 #define CPUPWR_POST_LATCH		U(0x408)	/* [8:11] per-cpu */
 
-#define BL31_BASE			UL(0x3e440000)
-#define BL31_LIMIT			UL(0x3e500000)	/* 768 KiB */
+#define BL31_BASE			UL(0x7f540000)
+#define BL31_LIMIT			UL(0x7f600000)	/* 768 KiB */
 
 /*
  * Non-secure (BL33) image: the kernel Image, preloaded by the boot loader.
